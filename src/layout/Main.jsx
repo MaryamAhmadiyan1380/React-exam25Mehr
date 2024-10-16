@@ -1,0 +1,44 @@
+import { Outlet } from "react-router-dom";
+import Footer from "./Footer";
+import Header from "./Header";
+import img1 from '../images/one.jpg';
+import img2 from '../images/two.jpg';
+import img3 from '../images/three.jpg';
+import img4 from '../images/four.jpg';
+import { Carousel } from 'react-responsive-carousel';
+import '../layout/Main.css';
+
+
+function Main() {
+ 
+  return (
+    <>
+      <Header />
+      <div>
+        <Outlet />
+        
+        <Carousel className="carousel">
+          <div id="carousel">
+            <img src={img1}  className="pic" alt="Carousel Image 1" />
+            <h2>Login Page Picture</h2>
+          </div>
+          <div>
+            <img src={img2} className="pic" alt="Carousel Image 2" />
+            <h2>Home Page Picture</h2>
+          </div>
+          <div>
+            <img src={img3} className="pic" alt="Carousel Image 3" />
+            <h2>User List Page Picture</h2>
+          </div>
+          <div>
+            <img src={img4} className="pic" alt="Carousel Image 4" />
+            <h2>Add Post Page Picture</h2>
+          </div>
+        </Carousel>
+      </div>
+      <Footer />
+    </>
+  );
+}
+
+export default Main
