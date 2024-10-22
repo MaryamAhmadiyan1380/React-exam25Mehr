@@ -7,10 +7,10 @@ import './User.css';
 import { Modal, Button } from 'react-bootstrap';
 
 const schema = yup.object().shape({
-  name: yup.string().required("نام اجباری است"),
-  username: yup.string().required("نام کاربری اجباری است"),
-  email: yup.string().email("ایمیل نا معتبر است").required("ایمیل اجباری است"),
-  phone: yup.number().required("شماره تلفن اجباری است")
+  name: yup.string().required("Name is mandatory"),
+  username: yup.string().required("UserName is mandatory"),
+  email: yup.string().email("The email is invalid").required("Email is mandatory"),
+  phone: yup.string().required("Phone is mandatory")
 });
 
 export const User = () => {
@@ -23,7 +23,6 @@ export const User = () => {
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
@@ -49,14 +48,26 @@ export const User = () => {
 
   const addInformation = (data) => {
     if (editingIndex !== null) {
-      const updatedList = infoList.map((info, index) =>
-        index === editingIndex ? newInfo : info
-      );
-      setInfoList(updatedList);
-      setEditingIndex(null);
-      setShowModal(true);  
+      Axios.put(`https://jsonplaceholder.typicode.com/users/${newInfo.id}`, newInfo)
+        .then(() => {
+          const updatedList = infoList.map((info, index) =>
+            index === editingIndex ? newInfo : info
+          );
+          setInfoList(updatedList);
+          setEditingIndex(null);
+          setShowModal(true);
+        })
+        .catch((err) => {
+          console.error('Update error:', err);
+        });
     } else {
-      setInfoList([...infoList, newInfo]);
+      Axios.post('https://jsonplaceholder.typicode.com/users', newInfo)
+        .then((res) => {
+          setInfoList([...infoList, res.data]);
+        })
+        .catch((err) => {
+          console.error('Create error:', err);
+        });
     }
     setNewInfo({
       name: '',
@@ -65,10 +76,17 @@ export const User = () => {
       phone: ''
     });
   };
-
+  
   const deleteInformation = (index) => {
-    const updatedList = infoList.filter((info, i) => i !== index);
-    setInfoList(updatedList);
+    const id = infoList[index].id;
+    Axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+      .then(() => {
+        const updatedList = infoList.filter((info, i) => i !== index);
+        setInfoList(updatedList);
+      })
+      .catch((err) => {
+        console.error('Delete error:', err);
+      });
   };
 
   const editInformation = (index) => {
@@ -80,6 +98,7 @@ export const User = () => {
     setValue('phone', info.phone);
     setEditingIndex(index);
   };
+  
 
   return (
     <div className='container'>
@@ -136,7 +155,7 @@ export const User = () => {
               <p>Username: {info.username}</p>
               <p>Email: {info.email}</p>
               <p>Phone: {info.phone}</p>
-              <button  type='button' onClick={() => editInformation(index)}>Edit</button>
+              <button type='button' onClick={() => editInformation(index)}>Edit</button>
               <button className='mt-2' type='button' onClick={() => deleteInformation(index)}>Delete</button>
             </div>
           ))}
@@ -144,14 +163,14 @@ export const User = () => {
       </form>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>ویرایش موفقیت‌آمیز</Modal.Title>
+          <Modal.Title>Ediet is successfully</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          اطلاعات با موفقیت ویرایش شد.
+          Ediet information is successfully
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            بستن
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

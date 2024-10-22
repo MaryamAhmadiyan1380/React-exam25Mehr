@@ -49,4 +49,25 @@
   button:hover {
     background-color: #0056b3;
   }
+  .add-post-container {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  form .form-group input,
+  form .form-group textarea,
+  form .form-group label {
+    width: 100%;
+    display: block;
+    margin: auto;
+  }
+  
+  form .form-group p {
+    color: red;
+    text-align: center
+  }
   

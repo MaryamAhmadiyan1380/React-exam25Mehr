@@ -6,11 +6,11 @@ export const Add = () => {
   const [post, setPost] = useState({
     title: '',
     body: '',
-    username: 'mor_2314',
-    password: '83r5^_'
+    username: '',
+    password: ''
   });
   const navigate = useNavigate();
-
+  const [showModal , setShowModal] = useState(false)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPost((prevPost) => ({
@@ -21,70 +21,84 @@ export const Add = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post('https://jsonplaceholder.typicode.com/posts', post)
-      .then((response) => {
-        console.log(response.data);
-        alert("پست با موفقیت اضافه شد !")
-        navigate('/home'); 
-      })
-      .catch((error) => {
-        console.error('There was an error adding the post!', error);
-      });
+    if(post.username === "mor_2314" && post.password === "83r5^_"){
+      Axios.post('https://jsonplaceholder.typicode.com/posts', post)
+        .then((response) => {
+          console.log(response.data);
+          alert("Post added successfully");
+          // navigate('/home');
+        })
+        .catch((error) => {
+          console.error('There was an error adding the post!', error);
+          setShowModal(true);
+        });
+    } else {
+      setShowModal(true);
+    }
   };
+  // const goToHome = () => {
+  //   navigate("/")
+  // }
 
   return (
     <div className='add-post-container mt-5'>
-      <h2>افزودن پست</h2>
+      <h2>Add Post</h2>
       <form onSubmit={handleSubmit}>
         <div className='form-group'>
-          <label>عنوان:</label>
+          <label>Title</label>
           <input
             type='text'
             name='title'
-            placeholder='عنوان پست را وارد کنید'
+            placeholder='Enter title in post'
             value={post.title}
             onChange={handleChange}
             required
           />
         </div>
         <div className='form-group'>
-          <label>متن پست:</label>
+          <label>Text post :</label>
           <textarea
             name='body'
-            placeholder='متن پست را وارد کنید'
+            placeholder='Enter  the text post'
             value={post.body}
             onChange={handleChange}
             required
           />
         </div>
         <div className='form-group'>
-          <label>نام کاربری:</label>
+          <label>User Name :</label>
           <input
             type='text'
             name='username'
+            placeholder='Enter your UserName'
             value={post.username}
-            readOnly
+            onChange={handleChange}
+            required
           />
         </div>
         <div className='form-group'>
-          <label>رمز عبور:</label>
+          <label>Password</label>
           <input
             type='password'
             name='password'
+            placeholder='Enter your password'
             value={post.password}
-            readOnly
+            onChange={handleChange}
+            required
           />
         </div>
-        <div className='form-group'>
-          <label>عکس:</label>
+        {/* <div className='form-group'>
+          <label>Photo</label>
           <input
             type='file'
             name='image'
             onChange={(e) => setPost({ ...post, image: e.target.files[0] })}
           />
-        </div>
-        <button type='submit'>افزودن پست</button>
+        </div> */}
+        <button type='submit'>Add post</button>
+        {/* <button onClick={goToHome} className='mt-2'>Go to Home</button> */}
       </form>
+      
     </div>
   );
 };
